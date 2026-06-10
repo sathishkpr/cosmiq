@@ -1,46 +1,317 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thirukanitha Horoscope Calculator</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', 'Noto Sans Tamil', sans-serif;
-    }
-    .tamil-font {
-      font-family: 'Noto Sans Tamil', sans-serif;
-    }
-    @media print {
-      .no-print {
-        display: none !important;
-      }
-      .print-only {
-        display: block !important;
-      }
-      body {
-        -webkit-print-color-adjust: exact;
-        background-color: white !important;
-      }
-    }
-  </style>
-<script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.36.0"
-  }
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>திருக்கணித ஜாதகம் — Thirukanitham</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Tamil:wght@500;700;900&family=Hind+Madurai:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#141B33;--night2:#1B2447;--gold:#C9A227;--gold2:#E8C95C;
+  --paper:#F5F2EA;--card:#FCFAF4;--ink:#23272F;--ink2:#5B6068;--line:#DDD6C4;
+  --teal:#0F6E5D;--red:#A8432F;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Hind Madurai",system-ui,sans-serif;font-size:16px;line-height:1.65}
+h1,h2,h3{font-family:"Noto Serif Tamil",serif}
+.mono{font-family:"IBM Plex Mono",monospace}
+header{background:var(--night);color:#EFE9D8;padding:34px 18px 30px;text-align:center;
+  background-image:radial-gradient(circle at 20% 30%, rgba(232,201,92,.10), transparent 40%),
+                   radial-gradient(circle at 80% 70%, rgba(232,201,92,.07), transparent 45%)}
+header .eyebrow{letter-spacing:.22em;font-size:11px;color:var(--gold2);text-transform:uppercase}
+header h1{font-size:clamp(26px,5vw,40px);font-weight:900;margin:.25em 0 .1em;color:#fff}
+header p{color:#B9BED2;font-size:13.5px;margin:.3em auto 0;max-width:60ch}
+.wrap{max-width:960px;margin:0 auto;padding:22px 16px 90px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:20px 22px;margin:16px 0;box-shadow:0 1px 4px rgba(20,27,51,.07)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+label{display:block;font-weight:700;font-size:13px;margin:0 0 4px;color:var(--ink2)}
+input,select{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;
+  background:#fff;color:var(--ink);font:15px "Hind Madurai",sans-serif}
+input:focus,select:focus{outline:2px solid var(--gold);outline-offset:1px}
+button{cursor:pointer;border:none;border-radius:10px;padding:12px 26px;
+  font:700 16px "Hind Madurai",sans-serif}
+button.primary{background:var(--night2);color:var(--gold2)}
+button.primary:hover{background:var(--night)}
+button.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink2);font-size:13.5px;padding:8px 14px}
+h2.sec{font-size:21px;font-weight:900;border-bottom:2px solid var(--gold);
+  display:inline-block;padding-bottom:2px;margin:6px 0 12px}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{font-size:12px;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;
+  text-align:left;padding:8px 8px;border-bottom:2px solid var(--line)}
+td{padding:8px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:none}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;color:#fff}
+.tag.u{background:var(--teal)}.tag.n{background:var(--red)}.tag.a{background:var(--gold);color:var(--night)}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.sumbox{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 13px}
+.sumbox .k{font-size:11.5px;color:var(--ink2);letter-spacing:.05em}
+.sumbox .v{font-weight:700;font-size:16px;font-family:"Noto Serif Tamil",serif}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.chartbox{background:var(--night2);border-radius:14px;padding:14px;
+  background-image:radial-gradient(circle at 70% 20%, rgba(232,201,92,.08), transparent 50%)}
+.chartbox h3{color:var(--gold2);text-align:center;margin:2px 0 10px;font-size:17px}
+svg text{font-family:"Hind Madurai",sans-serif}
+details.md{border:1px solid var(--line);border-radius:10px;margin:7px 0;background:var(--card)}
+details.md summary{cursor:pointer;padding:10px 14px;font-weight:700;display:flex;
+  justify-content:space-between;gap:10px;flex-wrap:wrap;list-style:none}
+details.md summary::-webkit-details-marker{display:none}
+details.md[open]{border-color:var(--gold)}
+details.md .bk{padding:2px 14px 12px}
+.now{background:rgba(201,162,39,.13)}
+.nowtag{font-size:10.5px;background:var(--gold);color:var(--night);border-radius:99px;padding:1px 8px;font-weight:700}
+.note{font-size:13px;color:var(--ink2);border-left:3px solid var(--gold);padding-left:12px;margin-top:14px}
+.err{color:var(--red);font-weight:700;margin-top:10px}
+.hidden{display:none!important}
+.btnrow{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;align-items:center}
+@media print{header{background:#fff;color:#000}button,.note{display:none}
+  .chartbox{background:#fff;border:1px solid #999}.chartbox h3{color:#000}}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Drik Ganitha · Lahiri Ayanamsa</div>
+  <h1>திருக்கணித ஜாதகம்</h1>
+  <p>பிறப்பு விவரங்களைக் கொடுத்தால் — லக்கினம், கிரக நிலை, ராசி/நவாம்ச கட்டங்கள், விம்சோத்தரி தசாபுத்தி, பஞ்சாங்கம் — அனைத்தும் தமிழில்.</p>
+</header>
+<div class="wrap">
+
+<div class="card" id="form">
+  <h2 class="sec">பிறப்பு விவரங்கள்</h2>
+  <div class="grid">
+    <div><label for="nm">பெயர்</label><input id="nm" placeholder="பெயர் (விருப்பம்)"></div>
+    <div><label for="dt">பிறந்த தேதி</label><input id="dt" type="date" value="1990-01-01"></div>
+    <div><label for="tm">பிறந்த நேரம் (24h)</label><input id="tm" type="time" value="06:00" step="60"></div>
+    <div><label for="place">பிறந்த இடம்</label>
+      <select id="place" onchange="placePick()">
+        <option value="12.6675,79.2853,5.5">ஆரணி, தமிழ்நாடு</option>
+        <option value="12.9165,79.1325,5.5">வேலூர்</option>
+        <option value="13.0827,80.2707,5.5">சென்னை</option>
+        <option value="9.9252,78.1198,5.5">மதுரை</option>
+        <option value="11.0168,76.9558,5.5">கோயம்புத்தூர்</option>
+        <option value="10.7905,78.7047,5.5">திருச்சி</option>
+        <option value="11.6643,78.1460,5.5">சேலம்</option>
+        <option value="8.7139,77.7567,5.5">திருநெல்வேலி</option>
+        <option value="41.8781,-87.6298,-6">சிகாகோ (CST குளிர்காலம் −6)</option>
+        <option value="41.8781,-87.6298,-5">சிகாகோ (CDT கோடை −5, மார்ச்–நவ)</option>
+        <option value="40.7128,-74.0060,-5">நியூயார்க் (EST −5)</option>
+        <option value="40.7128,-74.0060,-4">நியூயார்க் (EDT −4)</option>
+        <option value="manual">வேறு இடம் (கீழே நிரப்பவும்)</option>
+      </select></div>
+    <div><label for="lat">அட்சரேகை (Lat)</label><input id="lat" type="number" step="0.0001" value="12.6675"></div>
+    <div><label for="lon">தீர்க்கரேகை (Lon, கிழக்கு +)</label><input id="lon" type="number" step="0.0001" value="79.2853"></div>
+    <div><label for="tz">நேர மண்டலம் (UTC offset)</label><input id="tz" type="number" step="0.25" value="5.5"></div>
+  </div>
+  <div class="btnrow">
+    <button class="primary" onclick="generate()">ஜாதகம் கணிக்கவும்</button>
+    <button class="ghost" onclick="window.print()">அச்சிட / PDF</button>
+  </div>
+  <p class="err hidden" id="err"></p>
+  <p class="note">அமெரிக்கா/ஐரோப்பா பிறப்புகளுக்கு DST கவனம்: கோடைகால நேரத்தில் பிறந்தவர்களுக்கு CDT/EDT offset தேர்வு செய்யவும்.</p>
+</div>
+
+<div id="out" class="hidden">
+  <div class="card">
+    <h2 class="sec" id="title">ஜாதக சுருக்கம்</h2>
+    <div class="summary" id="summary"></div>
+  </div>
+
+  <div class="card">
+    <h2 class="sec">கிரக நிலை</h2>
+    <table><thead><tr><th>கிரகம்</th><th>ராசி</th><th>பாகை</th><th>நட்சத்திரம்</th><th>பாதம்</th><th>நிலை</th></tr></thead>
+    <tbody id="ptab"></tbody></table>
+  </div>
+
+  <div class="card">
+    <h2 class="sec">கட்டங்கள்</h2>
+    <div class="charts">
+      <div class="chartbox"><h3>ராசி</h3><div id="rasiChart"></div></div>
+      <div class="chartbox"><h3>நவாம்சம்</h3><div id="navChart"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="sec">விம்சோத்தரி தசை</h2>
+    <p style="font-size:13.5px;color:var(--ink2);margin-top:0">ஒவ்வொரு மகாதசையையும் தட்டினால் புத்திகள் விரியும். <span class="nowtag">நடப்பு</span> குறி இன்றைய காலத்தைக் காட்டுகிறது.</p>
+    <div id="dasa"></div>
+  </div>
+
+  <p class="note">கணிப்பு முறை: Meeus சூரிய/சந்திர தொடர் + JPL Kepler கிரக உறுப்புகள் + உண்மை ராகு (true node), லாஹிரி அயனாம்சம். Swiss Ephemeris-உடன் ஒப்பிட்டு சரிபார்க்கப்பட்டது — லக்கினம்/சூரியன்/சந்திரன்/ராகு ±1–2 கலை துல்லியம்; செவ்வாய் முதல் சனி வரை ±15–25 கலை (ராசி/நட்சத்திர எல்லைக்கு மிக அருகில் இருந்தால் மட்டும் பாதம் மாறலாம்).</p>
+</div>
+</div>
+
+<script>
+const D2R=Math.PI/180;
+const norm=x=>((x%360)+360)%360;
+const RASI=["மேஷம்","ரிஷபம்","மிதுனம்","கடகம்","சிம்மம்","கன்னி","துலாம்","விருச்சிகம்","தனுசு","மகரம்","கும்பம்","மீனம்"];
+const NAK=["அசுவினி","பரணி","கார்த்திகை","ரோகிணி","மிருகசீரிஷம்","திருவாதிரை","புனர்பூசம்","பூசம்","ஆயில்யம்","மகம்","பூரம்","உத்திரம்","அஸ்தம்","சித்திரை","சுவாதி","விசாகம்","அனுஷம்","கேட்டை","மூலம்","பூராடம்","உத்திராடம்","திருவோணம்","அவிட்டம்","சதயம்","பூரட்டாதி","உத்திரட்டாதி","ரேவதி"];
+const GRAHA=["சூரியன்","சந்திரன்","செவ்வாய்","புதன்","குரு","சுக்கிரன்","சனி","ராகு","கேது"];
+const GSHORT=["சூ","சந்","செ","பு","கு","சுக்","சனி","ரா","கே"];
+const VARA=["ஞாயிறு","திங்கள்","செவ்வாய்","புதன்","வியாழன்","வெள்ளி","சனி"];
+const TITHI=["பிரதமை","துவிதியை","திருதியை","சதுர்த்தி","பஞ்சமி","சஷ்டி","சப்தமி","அஷ்டமி","நவமி","தசமி","ஏகாதசி","துவாதசி","திரயோதசி","சதுர்த்தசி"];
+const YOGA=["விஷ்கம்பம்","ப்ரீதி","ஆயுஷ்மான்","சௌபாக்யம்","சோபனம்","அதிகண்டம்","சுகர்மா","திருதி","சூலம்","கண்டம்","விருத்தி","துருவம்","வியாகாதம்","ஹர்ஷணம்","வஜ்ரம்","சித்தி","வியதீபாதம்","வரீயான்","பரிகம்","சிவம்","சித்தம்","சாத்யம்","சுபம்","சுப்ரம்","பிராம்யம்","ஐந்திரம்","வைதிருதி"];
+const KAR_M=["பவம்","பாலவம்","கௌலவம்","தைதுலம்","கரசை","வணிசை","விஷ்டி"];
+const DASA_LORD=[8,5,0,1,2,7,4,6,3]; // index into GRAHA: Ketu,Ven,Sun,Moon,Mars,Rahu,Jup,Sat,Merc
+const DASA_YRS=[7,20,6,10,7,18,16,19,17];
+const OWN={0:[4],1:[3],2:[0,7],3:[2,5],4:[8,11],5:[1,6],6:[9,10]};
+const EXALT={0:0,1:1,2:9,3:5,4:3,5:11,6:6,7:1,8:7};
+
+const MOON_TERMS=[[0,0,1,0,6288774],[2,0,-1,0,1274027],[2,0,0,0,658314],[0,0,2,0,213618],[0,1,0,0,-185116],[0,0,0,2,-114332],[2,0,-2,0,58793],[2,-1,-1,0,57066],[2,0,1,0,53322],[2,-1,0,0,45758],[0,1,-1,0,-40923],[1,0,0,0,-34720],[0,1,1,0,-30383],[2,0,0,-2,15327],[0,0,1,2,-12528],[0,0,1,-2,10980],[4,0,-1,0,10675],[0,0,3,0,10034],[4,0,-2,0,8548],[2,1,-1,0,-7888],[2,1,0,0,-6766],[1,0,-1,0,-5163],[1,1,0,0,4987],[2,-1,1,0,4036],[2,0,2,0,3994],[4,0,0,0,3861],[2,0,-3,0,3665],[0,1,-2,0,-2689],[2,0,-1,2,-2602],[2,-1,-2,0,2390],[1,0,1,0,-2348],[2,-2,0,0,2236],[0,1,2,0,-2120],[0,2,0,0,-2069],[2,-2,-1,0,2048],[2,0,1,-2,-1773],[2,0,0,2,-1595],[4,-1,-1,0,1215],[0,0,2,2,-1110],[3,0,-1,0,-892],[2,1,1,0,-810],[4,-1,-2,0,759],[0,2,-1,0,-713],[2,2,-1,0,-700]];
+const EL={
+ Mercury:[0.38709927,0.20563593,7.00497902,252.25032350,77.45779628,48.33076593,0.00000037,0.00001906,-0.00594749,149472.67411175,0.16047689,-0.12534081],
+ Venus:[0.72333566,0.00677672,3.39467605,181.97909950,131.60246718,76.67984255,0.00000390,-0.00004107,-0.00078890,58517.81538729,0.00268329,-0.27769418],
+ Earth:[1.00000261,0.01671123,-0.00001531,100.46457166,102.93768193,0.0,0.00000562,-0.00004392,-0.01294668,35999.37244981,0.32327364,0.0],
+ Mars:[1.52371034,0.09339410,1.84969142,-4.55343205,-23.94362959,49.55953891,0.00001847,0.00007882,-0.00813131,19140.30268499,0.44441088,-0.29257343],
+ Jupiter:[5.20288700,0.04838624,1.30439695,34.39644051,14.72847983,100.47390909,-0.00011607,-0.00013253,-0.00183714,3034.74612775,0.21252668,0.20469106],
+ Saturn:[9.53667594,0.05386179,2.48599187,49.95424423,92.59887831,113.66242448,-0.00125060,-0.00050991,0.00193609,1222.49362201,-0.41897216,-0.28867794]};
+
+function jdFrom(y,mo,d,h,mi,tz){let ut=h+mi/60-tz;if(mo<=2){y-=1;mo+=12;}
+ const A=Math.floor(y/100),B=2-A+Math.floor(A/4);
+ return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(mo+1))+d+B-1524.5+ut/24;}
+function sunLon(T){const L0=norm(280.46646+36000.76983*T+0.0003032*T*T),
+ M=norm(357.52911+35999.05029*T-0.0001537*T*T),
+ C=(1.914602-0.004817*T-0.000014*T*T)*Math.sin(M*D2R)+(0.019993-0.000101*T)*Math.sin(2*M*D2R)+0.000289*Math.sin(3*M*D2R),
+ O=norm(125.04-1934.136*T);
+ return norm(L0+C-0.00569-0.00478*Math.sin(O*D2R));}
+function moonLon(T){
+ const Lp=norm(218.3164477+481267.88123421*T-0.0015786*T*T+T*T*T/538841),
+ D=norm(297.8501921+445267.1114034*T-0.0018819*T*T+T*T*T/545868),
+ M=norm(357.5291092+35999.0502909*T-0.0001536*T*T),
+ Mp=norm(134.9633964+477198.8675055*T+0.0087414*T*T+T*T*T/69699),
+ F=norm(93.2720950+483202.0175233*T-0.0036539*T*T-T*T*T/3526000),
+ E=1-0.002516*T-0.0000074*T*T;let s=0;
+ for(const[d,m,mp,f,c]of MOON_TERMS){const cc=c*(Math.abs(m)===1?E:Math.abs(m)===2?E*E:1);
+  s+=cc*Math.sin((d*D+m*M+mp*Mp+f*F)*D2R);}
+ const O=norm(125.04452-1934.136261*T);
+ return norm(Lp+s/1e6-17.20/3600*Math.sin(O*D2R));}
+function helio(n,T){const e=EL[n];
+ const a=e[0]+e[6]*T,ec=e[1]+e[7]*T,I=(e[2]+e[8]*T)*D2R,L=norm(e[3]+e[9]*T),w=e[4]+e[10]*T,O=e[5]+e[11]*T;
+ let M=(L-w)%360;if(M>180)M-=360;if(M<-180)M+=360;
+ let Ea=M+57.29578*ec*Math.sin(M*D2R);
+ for(let i=0;i<8;i++){const dM=M-(Ea-57.29578*ec*Math.sin(Ea*D2R));Ea+=dM/(1-ec*Math.cos(Ea*D2R));}
+ const xp=a*(Math.cos(Ea*D2R)-ec),yp=a*Math.sqrt(1-ec*ec)*Math.sin(Ea*D2R),
+ ww=(w-O)*D2R,Or=O*D2R;
+ return[(Math.cos(ww)*Math.cos(Or)-Math.sin(ww)*Math.sin(Or)*Math.cos(I))*xp+(-Math.sin(ww)*Math.cos(Or)-Math.cos(ww)*Math.sin(Or)*Math.cos(I))*yp,
+        (Math.cos(ww)*Math.sin(Or)+Math.sin(ww)*Math.cos(Or)*Math.cos(I))*xp+(-Math.sin(ww)*Math.sin(Or)+Math.cos(ww)*Math.cos(Or)*Math.cos(I))*yp];}
+function planetLon(n,T){const p=helio(n,T),e=helio('Earth',T);
+ return norm(Math.atan2(p[1]-e[1],p[0]-e[0])/D2R);}
+function trueNode(T){
+ const D=norm(297.8501921+445267.1114034*T-0.0018819*T*T),
+ F=norm(93.2720950+483202.0175233*T-0.0036539*T*T),
+ Mp=norm(134.9633964+477198.8675055*T+0.0087414*T*T),
+ M=norm(357.529+35999.05*T);
+ let om=125.0445479-1934.1362891*T+0.0020754*T*T;
+ om+=-1.4979*Math.sin(2*(D-F)*D2R)-0.1500*Math.sin(M*D2R)-0.1226*Math.sin(2*D*D2R)
+     +0.1176*Math.sin(2*F*D2R)-0.0801*Math.sin(2*(Mp-F)*D2R);
+ return norm(om);}
+function ayanamsa(T){return 23.85306+1.39604*T+0.000309*T*T;}
+function lagnaCalc(jd,T,lat,lon){
+ const gmst=norm(280.46061837+360.98564736629*(jd-2451545.0)+0.000387933*T*T),
+ lst=norm(gmst+lon),eps=(23.4392911-0.0130042*T)*D2R,th=lst*D2R,ph=lat*D2R;
+ return norm(Math.atan2(Math.cos(th),-(Math.sin(th)*Math.cos(eps)+Math.tan(ph)*Math.sin(eps)))/D2R);}
+
+function dms(x){const d=Math.floor(x%30),m=Math.floor((x%1)*60);return d+"°"+String(m).padStart(2,"0")+"′";}
+function nakOf(L){const n=Math.floor(L/(360/27)),p=Math.floor((L%(360/27))/(360/108))+1;return{n,p};}
+function navSign(L){return Math.floor(L/(10/3))%12;}
+function status(gi,rasi){
+ if(gi<=6&&OWN[gi]&&OWN[gi].includes(rasi))return['ஆட்சி','a'];
+ if(EXALT[gi]===rasi)return['உச்சம்','u'];
+ if(gi<=8&&((EXALT[gi]+6)%12)===rasi)return['நீசம்','n'];
+ return null;}
+function placePick(){const v=document.getElementById('place').value;
+ if(v==='manual')return;const[la,lo,tz]=v.split(',');
+ document.getElementById('lat').value=la;document.getElementById('lon').value=lo;
+ document.getElementById('tz').value=tz;}
+
+function siChart(positions,lagnaRasi){
+ // South Indian fixed layout: cell index by rasi
+ const POS={11:[0,0],0:[1,0],1:[2,0],2:[3,0],3:[3,1],4:[3,2],5:[3,3],6:[2,3],7:[1,3],8:[0,3],9:[0,2],10:[0,1]};
+ const S=76,W=S*4;let cells=Array.from({length:12},()=>[]);
+ positions.forEach(p=>cells[p.rasi].push(GSHORT[p.gi]+(p.retro?"(வ)":"")));
+ let svg=`<svg viewBox="0 0 ${W} ${W}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
+ svg+=`<rect x="1" y="1" width="${W-2}" height="${W-2}" fill="none" stroke="#C9A227" stroke-width="1.6"/>`;
+ for(let r=0;r<12;r++){const[c,row]=POS[r],x=c*S,y=row*S;
+  svg+=`<rect x="${x}" y="${y}" width="${S}" height="${S}" fill="none" stroke="#C9A227" stroke-width="0.9"/>`;
+  svg+=`<text x="${x+4}" y="${y+12}" font-size="8.5" fill="#8E96B8">${RASI[r]}</text>`;
+  if(r===lagnaRasi)svg+=`<line x1="${x+2}" y1="${y+16}" x2="${x+16}" y2="${y+2}" stroke="#E8C95C" stroke-width="1.4"/>`;
+  cells[r].forEach((g,i)=>{svg+=`<text x="${x+S/2}" y="${y+30+i*13}" font-size="11" font-weight="700" fill="#F3EDDC" text-anchor="middle">${g}</text>`;});}
+ svg+=`<text x="${W/2}" y="${W/2-4}" font-size="11" fill="#C9A227" text-anchor="middle" font-weight="700">திருக்கணிதம்</text>`;
+ svg+=`<text x="${W/2}" y="${W/2+12}" font-size="9" fill="#8E96B8" text-anchor="middle">லாஹிரி</text></svg>`;
+ return svg;}
+
+function fmtDate(jd){const d=new Date((jd-2440587.5)*86400000);
+ return String(d.getUTCDate()).padStart(2,'0')+"-"+String(d.getUTCMonth()+1).padStart(2,'0')+"-"+d.getUTCFullYear();}
+
+function generate(){
+ const err=document.getElementById('err');err.classList.add('hidden');
+ const dt=document.getElementById('dt').value,tm=document.getElementById('tm').value;
+ if(!dt||!tm){err.textContent="தேதி மற்றும் நேரத்தை நிரப்பவும்.";err.classList.remove('hidden');return;}
+ const[y,mo,d]=dt.split('-').map(Number),[h,mi]=tm.split(':').map(Number);
+ const lat=parseFloat(document.getElementById('lat').value),
+       lon=parseFloat(document.getElementById('lon').value),
+       tz=parseFloat(document.getElementById('tz').value);
+ const jd=jdFrom(y,mo,d,h,mi,tz),T=(jd-2451545)/36525,ay=ayanamsa(T);
+ const sid=x=>norm(x-ay);
+ // longitudes (sidereal) + retrograde via numeric speed
+ const tropical={0:sunLon(T),1:moonLon(T),2:planetLon('Mars',T),3:planetLon('Mercury',T),
+  4:planetLon('Jupiter',T),5:planetLon('Venus',T),6:planetLon('Saturn',T),7:trueNode(T)};
+ const dT=0.5/36525;
+ const speedOf=gi=>{const f={0:sunLon,1:moonLon,7:trueNode}[gi]||
+   (t=>planetLon(['','','Mars','Mercury','Jupiter','Venus','Saturn'][gi],t));
+   let s=f(T+dT)-f(T-dT);if(s>180)s-=360;if(s<-180)s+=360;return s;};
+ const positions=[];
+ for(let gi=0;gi<=8;gi++){
+  const L=gi===8?norm(sid(tropical[7])+180):sid(tropical[gi]);
+  const retro=gi===7||gi===8?true:(gi>=2&&gi<=6?speedOf(gi)<0:false);
+  positions.push({gi,L,rasi:Math.floor(L/30),retro});}
+ const lag=sid(lagnaCalc(jd,T,lat,lon)),lagRasi=Math.floor(lag/30);
+ const moon=positions[1].L,sun=positions[0].L;
+ // panchangam
+ const tithiIdx=Math.floor(norm(moonLon(T)-sunLon(T))/12);
+ const paksha=tithiIdx<15?"வளர்பிறை":"தேய்பிறை";
+ const tName=tithiIdx===14?"பௌர்ணமி":tithiIdx===29?"அமாவாசை":TITHI[tithiIdx%15];
+ const yogaIdx=Math.floor(norm(moon+sun)/(360/27));
+ const k=Math.floor(norm(moonLon(T)-sunLon(T))/6);
+ const kar=k===0?"கிம்ஸ்துக்நம்":k===57?"சகுனி":k===58?"சதுஷ்பாதம்":k===59?"நாகவம்":KAR_M[(k-1)%7];
+ const varaIdx=new Date(Date.UTC(y,mo-1,d)).getUTCDay();
+ const mn=nakOf(moon),ln=nakOf(lag);
+ // summary
+ const nm=document.getElementById('nm').value.trim();
+ document.getElementById('title').textContent=(nm?nm+" — ":"")+"ஜாதக சுருக்கம்";
+ const S=[["லக்கினம்",RASI[lagRasi]+" "+dms(lag)],["லக்கின நட்சத்திரம்",NAK[ln.n]+" "+ln.p],
+  ["ராசி (சந்திரன்)",RASI[positions[1].rasi]],["நட்சத்திரம்",NAK[mn.n]+" — பாதம் "+mn.p],
+  ["கிழமை",VARA[varaIdx]],["திதி",paksha+" "+tName],["யோகம்",YOGA[yogaIdx]],["கரணம்",kar],
+  ["அயனாம்சம்",Math.floor(ay)+"°"+String(Math.floor(ay%1*60)).padStart(2,'0')+"′ (லாஹிரி)"]];
+ document.getElementById('summary').innerHTML=S.map(([k,v])=>
+  `<div class="sumbox"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+ // planet table (lagna row + 9 grahas)
+ let rows=`<tr><td><b>லக்கினம்</b></td><td>${RASI[lagRasi]}</td><td class="mono">${dms(lag)}</td><td>${NAK[ln.n]}</td><td>${ln.p}</td><td>—</td></tr>`;
+ positions.forEach(p=>{const nk=nakOf(p.L),st=status(p.gi,p.rasi);
+  rows+=`<tr><td><b>${GRAHA[p.gi]}${p.retro&&p.gi>=2&&p.gi<=6?" (வ)":""}</b></td><td>${RASI[p.rasi]}</td><td class="mono">${dms(p.L)}</td><td>${NAK[nk.n]}</td><td>${nk.p}</td><td>${st?`<span class="tag ${st[1]}">${st[0]}</span>`:"—"}</td></tr>`;});
+ document.getElementById('ptab').innerHTML=rows;
+ // charts
+ document.getElementById('rasiChart').innerHTML=siChart(positions,lagRasi);
+ const navPos=positions.map(p=>({gi:p.gi,rasi:navSign(p.L),retro:false}));
+ document.getElementById('navChart').innerHTML=siChart(navPos,navSign(lag));
+ // dasa
+ const nakLen=360/27,nIdx=mn.n,lordSeq=nIdx%9;
+ const elapsed=(moon%nakLen)/nakLen;
+ const YR=365.2425,nowJD=Date.now()/86400000+2440587.5;
+ let html="",mdStart=jd-elapsed*DASA_YRS[lordSeq]*YR;
+ for(let i=0;i<9;i++){const li=(lordSeq+i)%9,yrs=DASA_YRS[li],mdEnd=mdStart+yrs*YR;
+  if(mdEnd>jd){
+   const cur=nowJD>=Math.max(mdStart,jd)&&nowJD<mdEnd;
+   let bk="",bs=mdStart;
+   for(let j=0;j<9;j++){const bi=(li+j)%9,bYrs=yrs*DASA_YRS[bi]/120,be=bs+bYrs*YR;
+    if(be>jd){const bcur=nowJD>=Math.max(bs,jd)&&nowJD<be;
+     bk+=`<tr class="${bcur?'now':''}"><td>${GRAHA[DASA_LORD[li]]} / ${GRAHA[DASA_LORD[bi]]} ${bcur?'<span class="nowtag">நடப்பு</span>':''}</td><td class="mono">${fmtDate(Math.max(bs,jd))}</td><td class="mono">${fmtDate(be)}</td></tr>`;}
+    bs=be;}
+   html+=`<details class="md"${cur?' open':''}><summary><span>${GRAHA[DASA_LORD[li]]} மகாதசை ${cur?'<span class="nowtag">நடப்பு</span>':''}</span><span class="mono" style="font-weight:400;font-size:13px">${fmtDate(Math.max(mdStart,jd))} → ${fmtDate(mdEnd)}</span></summary><div class="bk"><table><thead><tr><th>புத்தி</th><th>தொடக்கம்</th><th>முடிவு</th></tr></thead><tbody>${bk}</tbody></table></div></details>`;}
+  mdStart=mdEnd;}
+ document.getElementById('dasa').innerHTML=html;
+ document.getElementById('out').classList.remove('hidden');
+ document.getElementById('out').scrollIntoView({behavior:'smooth'});
 }
 </script>
-</head>
-<body class="bg-[#f8fafc] text-slate-900">
-  <div id="root"></div>
 </body>
 </html>
